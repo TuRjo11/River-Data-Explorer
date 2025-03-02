@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>River Data Explorer</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            width: 90%;
+            margin: 20px auto;
+        }
+        .controls {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin-top: 20px;
+        }
+        .controls div {
+            display: flex;
+            flex-direction: column;
+            min-width: 200px;
+        }
+        button {
+            padding: 10px 15px;
+            border: none;
+            background-color: #007bff;
+            color: white;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        select, input {
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background-color: #fff;
+            font-size: 1rem;
+        }
+        /* New CSS rules for side-by-side layout */
+        .row-container {
+            display: flex;
+            flex-direction: row;
+            gap: 20px;
+            margin-top: 20px;
+        }
+        .map {
+            flex: 1;
+            height: 600px;
+            border: 1px solid #ccc;
+        }
+        .chart-container {
+            flex: 1;
+            height: 600px;
+            border: 1px solid #ccc;
+            position: relative;
+        }
+        .chart {
+            width: 100%;
+            height: 100%;
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>River Data Explorer</h1>
+        <div class="controls">
+            <div>
+                <label for="data-type">Select Data Type:</label>
+                <select id="data-type">
+                    <option value="" disabled selected>Choose a data type</option>
+                    <option value="Water level">Water Level</option>
+                    <option value="Discharge">Discharge</option>
+                    <option value="Cross section">Cross Section</option>
+                    <option value="Sediment">Sediment</option>
+                    <option value="Salinity">Salinity</option>
+                    <option value="Water quality">Water Quality</option>
+                </select>
+            </div>
+            <div id="water-level-type-container" style="display: none;">
+                <label for="water-level-type">Water Level Type:</label>
+                <select id="water-level-type">
+                    <option value="" disabled selected>Choose water level type</option>
+                    <option value="3 or 6 Hourly Data">3 or 6 Hourly Data</option>
+                    <option value="Daily Data">Daily Data</option>
+                </select>
+            </div>
+            
+            <div>
+                <button id="load-data">Load Data</button>
+            </div>
+            <div>
+                <label for="river">Select River:</label>
+                <select id="river">
+                    <option value="None" selected>None</option> <!-- Add None option -->
+                    <option value="" disabled>Choose a river</option>
+                </select>
+            </div>
+            <div>
+                <label for="station">Select Station:</label>
+                <select id="station">
+                    <option value="" disabled selected>Choose a station</option>
+                </select>
+            </div>
+            
+            <!-- Cross-Section Specific Controls -->
+            <div id="cross-section-options" style="display: none;">
+                <div>
+                    <label for="year1">Choose 1st XS:</label>
+                    <select id="year1">
+                        <option value="None" selected>None</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="year2">Choose 2nd XS:</label>
+                    <select id="year2">
+                        <option value="None" selected>None</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Time-Series Specific Controls -->
+            <div id="time-series-options">
+                <div>
+                    <label for="year">Available Years:</label>
+                    <select id="year">
+                        <option value="None" selected>None</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="start-date">Start Date:</label>
+                    <input type="date" id="start-date"/>
+                </div>
+                <div>
+                    <label for="end-date">End Date:</label>
+                    <input type="date" id="end-date"/>
+                </div>
+            </div>
+
+            <!-- Column Selection for Sediment -->
+            <div id="column-container" style="display: none;">
+                <label for="column">Sediment Type:</label>
+                <select id="column">
+                    <option value="" disabled selected>Choose a column</option>
+                </select>
+            </div>
+
+            <div>
+                <button id="show-map">Show Map</button>
+                <button id="plot-data">Plot Data</button>
+                <button id="download-data">Download Data</button>
+            </div>
+        </div>
+
+        <div id="loading-message" style="display: none; color: red; font-weight: bold; text-align: center;">
+            Loading data... Please wait.
+        </div>
+
+        <!-- Map & Chart Containers -->
+        <div class="row-container">
+            <div id="map" class="map"></div>
+            <div id="chart-container" class="chart-container">
+                <canvas id="chart" class="chart"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <!-- External Libraries -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/moment@2.29.1/moment.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-moment@1.0.0"></script>
+
+    <!-- Main JavaScript -->
+    <script src="/static/main.js" type="module"></script>
+</body>
+</html>
